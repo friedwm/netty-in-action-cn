@@ -48,7 +48,9 @@ public class EchoClient {
             //连接到远程节点，阻塞等待直到连接完成
             ChannelFuture f = b.connect().sync();
             //阻塞，直到Channel 关闭
+            System.out.println("client connect complete");
             f.channel().closeFuture().sync();
+            System.out.println("client shutting down");
         } finally {
             //关闭线程池并且释放所有的资源
             group.shutdownGracefully().sync();

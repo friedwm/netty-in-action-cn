@@ -64,6 +64,7 @@ public class EchoServer {
                 " started and listening for connections on " + f.channel().localAddress());
             //(7) 获取 Channel 的CloseFuture，并且阻塞当前线程直到它完成
             f.channel().closeFuture().sync();
+            System.out.println("Server shutting down");
         } finally {
             //(8) 关闭 EventLoopGroup，释放所有的资源
             group.shutdownGracefully().sync();
