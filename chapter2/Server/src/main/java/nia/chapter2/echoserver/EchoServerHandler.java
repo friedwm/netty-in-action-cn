@@ -1,11 +1,12 @@
 package nia.chapter2.echoserver;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.ByteProcessor;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 代码清单 2-1 EchoServerHandler
@@ -59,24 +60,11 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
   @Override
   public void channelRead(ChannelHandlerContext ctx, Object msg) {
     System.out.println("[Inbound]channelRead");
-
     ByteBuf in = (ByteBuf) msg;
+    System.out.println("receive:" + in.toString(StandardCharsets.UTF_8));
     //将消息记录到控制台
-    if (in.readableBytes() > 0) {
-      System.out.print(">:");
-      in.forEachByte(new ByteProcessor() {
-        @Override
-        public boolean process(byte value) throws Exception {
-          System.out.print(value);
-          return true;
-        }
-      });
-      System.out.println(
-          ":<");
-    }
+    ctx.pipeline().write(Unpooled.copiedBuffer("You wrote:\n", StandardCharsets.UTF_8));
     in.release();
-    //将接收到的消息写给发送者，而不冲刷出站消息
-//        ctx.write(in);
   }
 
   @Override
